@@ -421,39 +421,21 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
-  function determineDx (elem, size) {
-    var oldWidth = elem.offsetWidth;
-    var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
-    var oldSize = oldWidth / windowWidth;
-
-    // Optional TODO: change to 3 sizes? no more xl?
-    // Changes the slider value to a percent width
-    function sizeSwitcher (size) {
+  // Iterates through pizza elements on the page and changes their widths
+  function changePizzaSizes(size) {
       switch(size) {
         case "1":
-          return 0.25;
+          newwidth = 25;
         case "2":
-          return 0.3333;
+          newwidth = 33.3;
         case "3":
-          return 0.5;
+          newwidth = 50;
         default:
           console.log("bug in sizeSwitcher");
       }
-    }
-
-    var newSize = sizeSwitcher(size);
-    var dx = (newSize - oldSize) * windowWidth;
-
-    return dx;
-  }
-
-  // Iterates through pizza elements on the page and changes their widths
-  function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    var pizzas = document.querySelectorAll(".randomPizzaContainer");
+    for (var i = 0; i < pizzas.length; i++) {
+      pizzas[i].style.width = newwidth + '%';
     }
   }
 
@@ -505,7 +487,7 @@ function updatePositions() {
   var items = document.querySelectorAll('.mover');
   for (var i = 0; i < items.length; i++) {
     var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+    items[i].style.transform = 'translate(' +  100 * phase + 'px' + ',0)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
