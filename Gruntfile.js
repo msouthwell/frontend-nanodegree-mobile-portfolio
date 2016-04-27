@@ -42,6 +42,17 @@ module.exports = function(grunt) {
                 tasks: ['imagemin']
             }
         },
+        cssmin: {
+  target: {
+    files: [{
+      expand: true,
+      cwd: 'src/views/css',
+      src: ['*.css', '!*.min.css'],
+      dest: 'dist/views/css',
+      ext: '.min.css'
+    }]
+  }
+},
         pagespeed: {
             options: { 
                 nokey: true,
@@ -88,11 +99,12 @@ module.exports = function(grunt) {
           done();
         });  
     });
-    grunt.registerTask('default', ['htmlmin', 'uglify']);
+    grunt.registerTask('default', ['htmlmin', 'uglify', 'cssmin']);
     grunt.loadNpmTasks('grunt-pagespeed');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     
 };
