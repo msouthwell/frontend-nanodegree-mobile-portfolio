@@ -20,9 +20,13 @@
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "^1.0.0",
     "grunt-contrib-cssmin": "^1.0.1",
+    "grunt-contrib-htmlmin": "^1.4.0",
     "grunt-contrib-imagemin": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "imagemin-mozjpeg": "^5.1.0"
+    "grunt-pagespeed": "^2.0.0",
+    "imagemin-mozjpeg": "^5.1.0",
+    "load-grunt-tasks": "^3.5.0",
+    "ngrok": "^2.1.7"
   }
 }

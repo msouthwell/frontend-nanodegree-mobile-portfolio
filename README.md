@@ -1,73 +1,171 @@
-## Website Performance Optimization portfolio project
+# Website Performance Optimization Project
 
-Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
+## Build
 
-To get started, check out the repository, inspect the code,
+First, clone the repository on your local machine.
 
-### Getting started
+Next, install the node dependencies
 
-####Part 1: Optimize PageSpeed Insights score for index.html
+`npm install`
 
-Some useful tips to help you get started:
+Use Grunt to build.
 
-1. Check out the repository
-1. To inspect the site on your phone, you can run a local server
+`grunt imagemin` Optimize and copy image files to the `dist/`
 
-  ```bash
-  $> cd /path/to/your-project-folder
-  $> python -m SimpleHTTPServer 8080
-  ```
+`grunt htmlmin` Minify and copy html files to the `dist/`
 
-1. Open a browser and visit localhost:8080
-1. Download and install [ngrok](https://ngrok.com/) to make your local server accessible remotely.
+`grunt uglify` Minify and copy scripts to the `dist/`
 
-  ``` bash
-  $> cd /path/to/your-project-folder
-  $> ngrok http 8080
-  ```
+Start local web server
 
-1. Copy the public URL ngrok gives you and try running it through PageSpeed Insights! Optional: [More on integrating ngrok, Grunt and PageSpeed.](http://www.jamescryer.com/2014/06/12/grunt-pagespeed-and-ngrok-locally-testing/)
+`cd dist`
 
-Profile, optimize, measure... and then lather, rinse, and repeat. Good luck!
+python3 `python -m http.server 8080` or python 2.7 `python -m SimpleHTTPServer 8080`
 
-####Part 2: Optimize Frames per Second in pizza.html
+View site on *localhost:8080*
 
-To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js. 
+## index.html pagespeed insights optimization
 
-You might find the FPS Counter/HUD Display useful in Chrome developer tools described here: [Chrome Dev Tools tips-and-tricks](https://developer.chrome.com/devtools/docs/tips-and-tricks).
+### Javascript
 
-### Optimization Tips and Tricks
-* [Optimizing Performance](https://developers.google.com/web/fundamentals/performance/ "web performance")
-* [Analyzing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/analyzing-crp.html "analyzing crp")
-* [Optimizing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/optimizing-critical-rendering-path.html "optimize the crp!")
-* [Avoiding Rendering Blocking CSS](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-blocking-css.html "render blocking css")
-* [Optimizing JavaScript](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/adding-interactivity-with-javascript.html "javascript")
-* [Measuring with Navigation Timing](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/measure-crp.html "nav timing api"). We didn't cover the Navigation Timing API in the first two lessons but it's an incredibly useful tool for automated page profiling. I highly recommend reading.
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/eliminate-downloads.html">The fewer the downloads, the better</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer.html">Reduce the size of text</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/image-optimization.html">Optimize images</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching.html">HTTP caching</a>
+I eliminated the render-blocking css from the Google Fonts API by using the 
+Google webfont loader.
 
-### Customization with Bootstrap
-The portfolio was built on Twitter's <a href="http://getbootstrap.com/">Bootstrap</a> framework. All custom styles are in `dist/css/portfolio.css` in the portfolio repo.
+```html
+    <script type="text/javascript">
+        WebFontConfig = {
+            google: {
+                families: ['Open+Sans:400,700']
+            }
+        };
+        (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                '://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
+```
 
-* <a href="http://getbootstrap.com/css/">Bootstrap's CSS Classes</a>
-* <a href="http://getbootstrap.com/components/">Bootstrap's Components</a>
+I also added `async` to the perfmatters.js and google-analytics scripts.
 
-### Sample Portfolios
+```html
+    <script async src="http://www.google-analytics.com/analytics.js"></script>
+    <script async src="js/perfmatters.min.js"></script>
+```
 
-Feeling uninspired by the portfolio? Here's a list of cool portfolios I found after a few minutes of Googling.
+### CSS
 
-* <a href="http://www.reddit.com/r/webdev/comments/280qkr/would_anybody_like_to_post_their_portfolio_site/">A great discussion about portfolios on reddit</a>
-* <a href="http://ianlunn.co.uk/">http://ianlunn.co.uk/</a>
-* <a href="http://www.adhamdannaway.com/portfolio">http://www.adhamdannaway.com/portfolio</a>
-* <a href="http://www.timboelaars.nl/">http://www.timboelaars.nl/</a>
-* <a href="http://futoryan.prosite.com/">http://futoryan.prosite.com/</a>
-* <a href="http://playonpixels.prosite.com/21591/projects">http://playonpixels.prosite.com/21591/projects</a>
-* <a href="http://colintrenter.prosite.com/">http://colintrenter.prosite.com/</a>
-* <a href="http://calebmorris.prosite.com/">http://calebmorris.prosite.com/</a>
-* <a href="http://www.cullywright.com/">http://www.cullywright.com/</a>
-* <a href="http://yourjustlucky.com/">http://yourjustlucky.com/</a>
-* <a href="http://nicoledominguez.com/portfolio/">http://nicoledominguez.com/portfolio/</a>
-* <a href="http://www.roxannecook.com/">http://www.roxannecook.com/</a>
-* <a href="http://www.84colors.com/portfolio.html">http://www.84colors.com/portfolio.html</a>
+I inlined all of the css code from `styles.css` into index.html.  The 'print' media query was made its own *css* file.
+
+```html
+<link href="css/print.css" rel="stylesheet" media='print'>
+```
+
+### html and JavaScript minify
+I minified all html and Javascript files using Grunt packages.
+
+### Image Optimization
+
+I used *imagemagick* to compress the two large images (pizzeria.jpg) that were being loaded on both *index.html* and *pizza.html*. 
+```
+ $ convert -strip -interlace Plane -gaussian-blue 0.05 -quality 85% 
+```
+
+*imagemagick* was also used to resize the index.html pizza.jpg and the views/images/pizza.png.
+
+I used the `grunt-contrib-imagemin` package to optimize all of the images in the project.  This reduced the total number of bytes that need to be downloaded.
+
+## pizza.html and main.js optimization
+
+### Change Pizza Size Optimization
+
+I removed the layout thrashing from this function by pulling the `document.querySelectorAll` out of the for loop.  This creates a single read of the layout properties and then allows us to batch write the new style.
+
+I also refactored the pizza movement logic so that instead of resizing the pizzas by a set pixel width (which was needlessly complicated) it instead risizes the pizzas by a percentage width.
+
+```javascript
+ function changePizzaSizes(size) {
+      switch(size) {
+        case "1":
+          newwidth = 25;
+          break;
+        case "2":
+          newwidth = 33.3;
+           break;
+        case "3":
+          newwidth = 50;
+          break;
+        default:
+          console.log("bug in sizeSwitcher");
+      }
+    var pizzas = document.querySelectorAll(".randomPizzaContainer");
+    for (var i = 0; i < pizzas.length; i++) {
+      pizzas[i].style.width = newwidth + '%';
+    }
+  }
+```
+
+### Moving Pizza Changes
+
+#### requestAnimationFrame
+
+I used `window.requestAnimationFrame()` to call updatePositions().
+
+#### Reduce forced syncronous layout 
+
+I altered `updatePositions()` to do single read of the moving pizzas and the scroll position.  I then used the for loop to conduct all of the layout updates as a single batch.  
+
+I also switch to **.transform** and **translate**.  **Transform** does not cause any change to geometry so the page does not need to redo layout or paint. This removes the layout thrashing that was occuring.
+
+```
+function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
+
+  var items = document.querySelectorAll('.mover');
+  var scrolltop = document.body.scrollTop;
+  for (var i = 0; i < items.length; i++) {
+    var phase = Math.sin((scrolltop/ 1250) + (i % 5));
+    items[i].style.transform = 'translate(' + (100 * phase + (i%movingPizzaColumns) * movingPizzaPixelSeperation)+ 'px, 0)' + 'translateZ(0)';
+}
+```
+
+#### Reduce number of moving pizzas
+I reduced the number of moving pizza containers from 200 to 25.  25 pizza containers is more than enough to fill the screen and achieve the desired effects.  I also reduced the number of pizza columns from 8 to 5 for the same reason.
+
+#### Resize pizza.png image
+I resized the pizza.png image to be 74 x 100px wide to remove the need for the browser to resize the images on creation.
+
+```javascript
+var movingPizzaColumns = 5;
+var movingPizzaPixelSeperation = 256;
+
+// Generates the sliding pizzas when the page loads.
+document.addEventListener('DOMContentLoaded', function() {
+
+  for (var i = 0; i < 25; i++) {
+    var elem = document.createElement('img');
+    elem.className = 'mover';
+    elem.src = "images/pizza_sm.png";
+    // elem.style.height = "100px";
+    // elem.style.width = "73.333px";
+    elem.basicLeft = (i % movingPizzaColumns) * movingPizzaPixelSeperation;
+    elem.style.top = (Math.floor(i / movingPizzaColumns) * movingPizzaPixelSeperation) + 'px';
+    document.querySelector("#movingPizzas1").appendChild(elem);
+  }
+  window.requestAnimationFrame(updatePositions);
+});
+```
+
+This also required me to remove `width: 256px;` from the .mover class.
+
+```css
+.mover {
+  position: fixed;
+  z-index: -1;
+}
+```
