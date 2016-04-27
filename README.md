@@ -17,6 +17,7 @@ Use Grunt to build.
 `grunt uglify` Minify and copy scripts to the `dist/`
 
 `grunt cssmin` Minify and copy views/css to the `dist/`
+
 Start local web server
 
 `cd dist`
