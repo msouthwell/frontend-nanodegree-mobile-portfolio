@@ -28,7 +28,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['src/**/*.js'],
-                tasks: ['jshint', 'uglify'],
+                tasks: ['uglify'],
                 options: {
                     spawn: false,
                 },
@@ -99,7 +99,7 @@ module.exports = function(grunt) {
           done();
         });  
     });
-    grunt.registerTask('default', ['htmlmin', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['htmlmin', 'uglify', 'cssmin', 'imagemin']);
     grunt.loadNpmTasks('grunt-pagespeed');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-uglify');

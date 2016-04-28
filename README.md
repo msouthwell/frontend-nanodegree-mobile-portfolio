@@ -10,13 +10,7 @@ Next, install the node dependencies
 
 Use Grunt to build.
 
-`grunt imagemin` Optimize and copy image files to the `dist/`
-
-`grunt htmlmin` Minify and copy html files to the `dist/`
-
-`grunt uglify` Minify and copy scripts to the `dist/`
-
-`grunt cssmin` Minify and copy views/css to the `dist/`
+`grunt build'
 
 Start local web server
 
@@ -25,6 +19,10 @@ Start local web server
 python3 `python -m http.server 8080` or python 2.7 `python -m SimpleHTTPServer 8080`
 
 View site on *localhost:8080*
+
+### Grunt tasks
+
+I am using `imagemin`, `htmlmin`, `uglify`, and `cssmin` to optimize all of the files for the website and then move them to the `dist/` directory for deployment.
 
 ## index.html pagespeed insights optimization
 
@@ -105,7 +103,7 @@ I also refactored the pizza movement logic so that instead of resizing the pizza
           console.log("bug in sizeSwitcher");
       }
     var pizzas = document.querySelectorAll(".randomPizzaContainer");
-    for (var i = 0; i < pizzas.length; i++) {
+    for (var i = 0, len=pizzas.length; i < len; i++) { //removed .length call each time for loop is executed
       pizzas[i].style.width = newwidth + '%';
     }
   }
@@ -123,41 +121,43 @@ I altered `updatePositions()` to do single read of the moving pizzas and the scr
 
 I also switch to **.transform** and **translate**.  **Transform** does not cause any change to geometry so the page does not need to redo layout or paint. This removes the layout thrashing that was occuring.
 
-```
+```javascript
 function updatePositions() {
+  'use strict';
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
+  var items = document.querySelectorAll('.mover'); 
   var scrolltop = document.body.scrollTop;
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((scrolltop/ 1250) + (i % 5));
-    items[i].style.transform = 'translate(' + (100 * phase + (i%movingPizzaColumns) * movingPizzaPixelSeperation)+ 'px, 0)' + 'translateZ(0)';
+  var phase; //brought var phase creation outside of for loop
+  for (var i = 0, len = items.length; i < len; i++) { //changed to single .length call
+    phase = Math.sin((scrolltop/ 1250) + (i % 5));
+    items[i].style.transform = 'translate(' + 100 * phase +'px)';
+  }
 }
 ```
 
 #### Reduce number of moving pizzas
-I reduced the number of moving pizza containers from 200 to 25.  25 pizza containers is more than enough to fill the screen and achieve the desired effects.  I also reduced the number of pizza columns from 8 to 5 for the same reason.
+I reduced the number of moving pizza containers from 200 to equal the number of columns x #rows where rows is based on the height of the screen.
 
 #### Resize pizza.png image
 I resized the pizza.png image to be 74 x 100px wide to remove the need for the browser to resize the images on creation.
 
 ```javascript
-var movingPizzaColumns = 5;
-var movingPizzaPixelSeperation = 256;
+var columns = 8;
+var pixelSeperation = 256;
+var rows = Math.floor(window.screen.height / pixelSeperation) + 1;
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
-
-  for (var i = 0; i < 25; i++) {
+  movers = document.getElementById("movingPizzas1"); //quicker api call than querySelector
+  for (var i = 0; i < columns*rows; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza_sm.png";
-    // elem.style.height = "100px";
-    // elem.style.width = "73.333px";
-    elem.basicLeft = (i % movingPizzaColumns) * movingPizzaPixelSeperation;
-    elem.style.top = (Math.floor(i / movingPizzaColumns) * movingPizzaPixelSeperation) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    elem.style.left = (i % columns) * pixelSeperation + 'px';
+    elem.style.top = (Math.floor(i / columns) * pixelSeperation) + 'px';
+    movers.appendChild(elem);
   }
   window.requestAnimationFrame(updatePositions);
 });

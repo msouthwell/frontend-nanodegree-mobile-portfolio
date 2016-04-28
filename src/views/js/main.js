@@ -150,6 +150,7 @@ String.prototype.capitalize = function() {
 
 // Pulls adjective out of array using random number sent from generator
 function getAdj(x){
+  'use strict';
   switch(x) {
     case "dark":
       var dark = ["dark","morbid", "scary", "spooky", "gothic", "deviant", "creepy", "sadistic", "black", "dangerous", "dejected", "haunted",
@@ -214,6 +215,7 @@ function getAdj(x){
 
 // Pulls noun out of array using random number sent from generator
 function getNoun(y) {
+  'use strict';
   switch(y) {
     case "animals":
       var animals = ["flamingo", "hedgehog", "owl", "elephant", "pussycat", "alligator", "dachsund", "poodle", "beagle", "crocodile", "kangaroo",
@@ -287,6 +289,7 @@ var nouns = ["animals", "everyday", "fantasy", "gross", "horror", "jewelry", "pl
 
 // Generates random numbers for getAdj and getNoun functions and returns a new pizza name
 function generator(adj, noun) {
+  'use strict';
   var adjectives = getAdj(adj);
   var nouns = getNoun(noun);
   var randomAdjective = parseInt(Math.random() * adjectives.length);
@@ -360,6 +363,7 @@ var makeRandomPizza = function() {
 
 // returns a DOM element for each pizza
 var pizzaElementGenerator = function(i) {
+  'use strict';
   var pizzaContainer,             // contains pizza title, image and list of ingredients
       pizzaImageContainer,        // contains the pizza image
       pizzaImage,                 // the pizza image itself
@@ -406,13 +410,13 @@ var resizePizzas = function(size) {
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        document.getElementById("pizzaSize").innerHTML = "Small"; //changed from .querySelector
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        document.getElementById("pizzaSize").innerHTML = "Medium";//changed from .querySelector
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        document.getElementById("pizzaSize").innerHTML = "Large";//changed from .querySelector
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -436,8 +440,8 @@ var resizePizzas = function(size) {
         default:
           console.log("bug in sizeSwitcher");
       }
-    var pizzas = document.querySelectorAll(".randomPizzaContainer");
-    for (var i = 0; i < pizzas.length; i++) {
+    var pizzas = document.querySelectorAll(".randomPizzaContainer"); 
+    for (var i = 0, len=pizzas.length; i < len; i++) { //removed .length call each time for loop is executed
       pizzas[i].style.width = newwidth + '%';
     }
   }
@@ -454,8 +458,8 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+var pizzasDiv = document.getElementById("randomPizzas"); //brought out of for loop
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -471,6 +475,7 @@ var frame = 0;
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
+  'use strict';
   var numberOfEntries = times.length;
   var sum = 0;
   for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
@@ -484,14 +489,16 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
+  'use strict';
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
+  var items = document.querySelectorAll('.mover'); 
   var scrolltop = document.body.scrollTop;
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((scrolltop/ 1250) + (i % 5));
-    items[i].style.transform = 'translate(' + (100 * phase + (i%movingPizzaColumns)*movingPizzaPixelSeperation) + 'px, 0)' + 'translateZ(0)';
+  var phase; //brought var phase creation outside of for loop
+  for (var i = 0, len = items.length; i < len; i++) { //changed to single .length call
+    phase = Math.sin((scrolltop/ 1250) + (i % 5));
+    items[i].style.transform = 'translate(' + 100 * phase +'px)';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -509,21 +516,20 @@ function updatePositions() {
 // runs updatePositions on scroll
 window.addEventListener('scroll', window.requestAnimationFrame(updatePositions));
 
-var movingPizzaColumns = 5;
-var movingPizzaPixelSeperation = 256;
+var columns = 8;
+var pixelSeperation = 256;
+var rows = Math.floor(window.screen.height / pixelSeperation) + 1;
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
-
-  for (var i = 0; i < 25; i++) {
+  movers = document.getElementById("movingPizzas1"); //quicker api call than querySelector
+  for (var i = 0; i < columns*rows; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza_sm.png";
-    // elem.style.height = "100px";
-    // elem.style.width = "73.333px";
-    elem.basicLeft = (i % movingPizzaColumns) * movingPizzaPixelSeperation;
-    elem.style.top = (Math.floor(i / movingPizzaColumns) * movingPizzaPixelSeperation) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    elem.style.left = (i % columns) * pixelSeperation + 'px'; //changed from basicLeft since tranform is being used now
+    elem.style.top = (Math.floor(i / columns) * pixelSeperation) + 'px';
+    movers.appendChild(elem);
   }
   window.requestAnimationFrame(updatePositions);
 });
